@@ -60,6 +60,7 @@ export interface DailyTrendItem {
 
 export interface HourlyTrendItem {
   hour: number;
+  hourLabel?: string;
   orders: number;
   revenue: number;
   pizzas: number;
@@ -81,6 +82,7 @@ export interface CategoryDistributionItem {
   quantity: number;
   orders: number;
   percentage: number;
+  avgOrderValue?: number;
 }
 
 export interface SizeDistributionItem {

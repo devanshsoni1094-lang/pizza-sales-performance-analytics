@@ -3,25 +3,27 @@
 @tailwind utilities;
 
 :root {
-  --background-dark: #120907;
-  --pbi-brown-card: #562316;
-  --pbi-brown-header: #6d2d1d;
-  --pbi-brown-border: #7f3724;
-  --pbi-cyan: #0080a8;
-  --pbi-orange: #d9531e;
-  --pbi-text-cyan: #38bdf8;
+  --bg-dark: #07090e;
+  --card-bg: #0d121f;
+  --card-border: rgba(30, 41, 59, 0.7);
+  --text-primary: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-amber: #f59e0b;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
 }
 
 body {
-  color: #ffffff;
-  background-color: var(--background-dark);
-  background-image: linear-gradient(rgba(18, 9, 7, 0.75), rgba(18, 9, 7, 0.85)), url('/delicious-pizza-studio.jpg');
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.3) 0%, transparent 65%),
+    radial-gradient(circle at 90% 15%, rgba(245, 158, 11, 0.03) 0%, transparent 40%);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom Scrollbars */
@@ -31,55 +33,38 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #120907;
+  background: #07090e;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #562316;
-  border-radius: 4px;
+  background: #1e293b;
+  border-radius: 9999px;
 }
 
-/* Power BI Card Styles */
-.pbi-card {
-  background-color: rgba(86, 35, 22, 0.92);
-  border: 1px solid #7f3724;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
 
-.pbi-card-title {
-  color: #38bdf8;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+/* Enterprise Intelligence Card styling */
+.intel-card {
+  background-color: rgba(13, 18, 31, 0.9);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
 }
 
-.pbi-[#0080a8] {
-  color: #0080a8;
+.intel-card-hover {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Custom table styling for Daily Trend Matrix */
-.pbi-matrix-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 10px;
-  text-align: center;
-  border: 1px solid #7f3724;
+.intel-card-hover:hover {
+  border-color: rgba(71, 85, 105, 0.9);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.07);
+  transform: translateY(-2px);
 }
 
-.pbi-matrix-table th {
-  background-color: #6d2d1d;
-  color: #e2e8f0;
-  padding: 2px 4px;
-  border: 1px solid #7f3724;
-  font-weight: 600;
-}
-
-.pbi-matrix-table td {
-  background-color: #44190e;
-  color: #ffffff;
-  padding: 2px 4px;
-  border: 1px solid #7f3724;
-  font-family: monospace;
+/* Numeric Font Tabular Numbers */
+.font-numeric {
+  font-feature-settings: "tnum" 1, "lnum" 1;
 }
