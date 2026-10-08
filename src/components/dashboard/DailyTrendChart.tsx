@@ -11,7 +11,6 @@ import {
   Cell,
   CartesianGrid,
 } from 'recharts';
-import { Calendar, Info } from 'lucide-react';
 import { DailyTrendItem } from '@/types/pizza';
 import { formatCurrency, formatNumber, formatPercent } from '@/utils/formatters';
 
@@ -35,7 +34,7 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({
         <div className="bg-[#0b101d] border border-slate-700/80 p-3.5 rounded-xl shadow-2xl text-xs space-y-1.5 backdrop-blur-md">
           <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
             <span className="font-bold text-amber-400 text-sm font-mono">{item.day}</span>
-            <span className="text-[10px] text-slate-400 font-mono">{formatPercent(item.pctOfTotal)} of total</span>
+            <span className="text-[10px] text-slate-400 font-mono">{formatPercent(item.pctOfTotal || 0)} of total</span>
           </div>
           <div className="flex justify-between gap-5 text-slate-300">
             <span>Total Orders:</span>
@@ -65,7 +64,7 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({
       <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-800/80">
         <div className="flex items-center space-x-2.5">
           <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
-            <Calendar className="w-4 h-4" />
+            <span className="font-bold text-xs font-mono">D</span>
           </div>
           <div>
             <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-slate-200">
@@ -130,15 +129,6 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-      </div>
-
-      {/* Visual Footer Note */}
-      <div className="mt-3 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800/80 pt-2.5 font-mono">
-        <span className="flex items-center gap-1.5">
-          <Info className="w-3.5 h-3.5 text-slate-400" />
-          Peak sales volume on <strong className="text-amber-400 font-bold">Friday (3,538 orders)</strong> & <strong className="text-amber-400 font-bold">Thursday</strong>
-        </span>
-        <span className="text-[10px] text-slate-400">7 Days</span>
       </div>
 
     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Trophy, DollarSign, Package, ShoppingCart, Award, AlertTriangle, ArrowUpRight } from 'lucide-react';
+import { Trophy, DollarSign, Package, ShoppingCart, Award, AlertTriangle } from 'lucide-react';
 import { PizzaPerformanceItem } from '@/types/pizza';
 import { formatCurrency, formatNumber, formatPercent } from '@/utils/formatters';
 
@@ -135,7 +135,7 @@ export const BestWorstSellers: React.FC<BestWorstSellersProps> = ({ data }) => {
                   </div>
 
                   <div className="flex justify-between text-[10px] text-slate-400 font-mono pt-0.5">
-                    <span>Revenue: {formatCurrency(item.revenue)} ({formatPercent(item.revenueShare, 1)})</span>
+                    <span>Revenue: {formatCurrency(item.revenue)} ({formatPercent(item.revenueShare || 0, 1)})</span>
                     <span>Qty: {formatNumber(item.quantity)} | Orders: {formatNumber(item.orders)}</span>
                   </div>
                 </div>
@@ -188,7 +188,7 @@ export const BestWorstSellers: React.FC<BestWorstSellersProps> = ({ data }) => {
                   </div>
 
                   <div className="flex justify-between text-[10px] text-slate-400 font-mono pt-0.5">
-                    <span>Revenue: {formatCurrency(item.revenue)} ({formatPercent(item.revenueShare, 1)})</span>
+                    <span>Revenue: {formatCurrency(item.revenue)} ({formatPercent(item.revenueShare || 0, 1)})</span>
                     <span>Qty: {formatNumber(item.quantity)} | Orders: {formatNumber(item.orders)}</span>
                   </div>
                 </div>

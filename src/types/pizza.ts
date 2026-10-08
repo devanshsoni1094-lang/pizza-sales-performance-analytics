@@ -22,7 +22,7 @@ export interface FilterState {
   category: string; // 'All' or specific
   size: string; // 'All' or specific
   day: string; // 'All' or specific day
-  month: string; // 'All' or specific month
+  month: string; // 'All' or specific month ('April' for Apr 2015 preset)
   startDate: string; // 'YYYY-MM-DD' or ''
   endDate: string; // 'YYYY-MM-DD' or ''
   searchTerm: string;
@@ -55,16 +55,15 @@ export interface DailyTrendItem {
   orders: number;
   revenue: number;
   pizzas: number;
-  pctOfTotal: number;
+  pctOfTotal?: number;
 }
 
 export interface HourlyTrendItem {
   hour: number;
-  hourLabel: string;
   orders: number;
   revenue: number;
   pizzas: number;
-  isPeak: boolean;
+  isPeak?: boolean;
 }
 
 export interface MonthlyTrendItem {
@@ -82,7 +81,6 @@ export interface CategoryDistributionItem {
   quantity: number;
   orders: number;
   percentage: number;
-  avgOrderValue: number;
 }
 
 export interface SizeDistributionItem {
@@ -100,8 +98,7 @@ export interface PizzaPerformanceItem {
   revenue: number;
   quantity: number;
   orders: number;
-  avgUnitPrice: number;
-  revenueShare: number;
+  revenueShare?: number;
 }
 
 export interface IntelligenceSignal {

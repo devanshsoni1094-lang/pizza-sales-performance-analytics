@@ -5,25 +5,20 @@ import {
   PizzaSize,
   FilterState,
   KPIMetrics,
-  KPIMetricCard,
   DailyTrendItem,
   HourlyTrendItem,
-  MonthlyTrendItem,
   CategoryDistributionItem,
   SizeDistributionItem,
   PizzaPerformanceItem,
-  IntelligenceSignal,
 } from '@/types/pizza';
-import { formatCurrency, formatNumber, formatDecimal, formatPercent } from './formatters';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
-const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const DAYS_ORDER = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const SHORT_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 // Hydrate compact records into full TypeScript PizzaRecord array
 export const getAllRecords = (): PizzaRecord[] => {
@@ -70,8 +65,12 @@ export const filterRecords = (
     if (filters.day && filters.day !== 'All' && r.day !== filters.day) {
       return false;
     }
-    if (filters.month && filters.month !== 'All' && r.month !== filters.month) {
-      return false;
+    if (filters.month && filters.month !== 'All') {
+      const target = filters.month.toLowerCase();
+      const itemMonth = r.month.toLowerCase();
+      if (!itemMonth.startsWith(target) && itemMonth !== target) {
+        return false;
+      }
     }
     if (filters.startDate && r.date < filters.startDate) {
       return false;
@@ -123,85 +122,9 @@ export const computeKPIMetrics = (records: PizzaRecord[]): KPIMetrics => {
   };
 };
 
-// Executive KPI Cards with Sparklines & Comparison Signals
-export const computeKPICardsData = (records: PizzaRecord[]): KPIMetricCard[] => {
-  const kpis = computeKPIMetrics(records);
-  const monthlyTrends = computeMonthlyTrends(records);
-
-  const revSparkline = monthlyTrends.map((m) => m.revenue);
-  const ordersSparkline = monthlyTrends.map((m) => m.orders);
-  const pizzasSparkline = monthlyTrends.map((m) => m.pizzas);
-  const aovSparkline = monthlyTrends.map((m) => (m.orders > 0 ? m.revenue / m.orders : 0));
-  const avgPizzasSparkline = monthlyTrends.map((m) => (m.orders > 0 ? m.pizzas / m.orders : 0));
-
-  return [
-    {
-      id: 'revenue',
-      title: 'TOTAL REVENUE',
-      value: formatCurrency(kpis.totalRevenue),
-      rawValue: kpis.totalRevenue,
-      change: '+14.2%',
-      changeType: 'positive',
-      comparisonText: 'vs budget target',
-      daxFormula: 'DAX: SUM(total_price)',
-      sparklineData: revSparkline,
-      category: 'financial',
-    },
-    {
-      id: 'aov',
-      title: 'AVERAGE ORDER VALUE',
-      value: formatCurrency(kpis.averageOrderValue),
-      rawValue: kpis.averageOrderValue,
-      change: '+3.8%',
-      changeType: 'positive',
-      comparisonText: 'per ticket avg',
-      daxFormula: 'DAX: Revenue / Orders',
-      sparklineData: aovSparkline,
-      category: 'financial',
-    },
-    {
-      id: 'pizzas',
-      title: 'TOTAL PIZZAS SOLD',
-      value: formatNumber(kpis.totalPizzasSold),
-      rawValue: kpis.totalPizzasSold,
-      change: '+11.5%',
-      changeType: 'positive',
-      comparisonText: 'units volume',
-      daxFormula: 'DAX: SUM(quantity)',
-      sparklineData: pizzasSparkline,
-      category: 'volume',
-    },
-    {
-      id: 'orders',
-      title: 'TOTAL ORDERS',
-      value: formatNumber(kpis.totalOrders),
-      rawValue: kpis.totalOrders,
-      change: '+8.7%',
-      changeType: 'positive',
-      comparisonText: 'distinct orders',
-      daxFormula: 'DAX: DISTINCT(order_id)',
-      sparklineData: ordersSparkline,
-      category: 'operational',
-    },
-    {
-      id: 'avg_pizzas',
-      title: 'AVG PIZZAS / ORDER',
-      value: formatDecimal(kpis.averagePizzasPerOrder, 2),
-      rawValue: kpis.averagePizzasPerOrder,
-      change: '+1.2%',
-      changeType: 'positive',
-      comparisonText: 'basket density',
-      daxFormula: 'DAX: Pizzas / Orders',
-      sparklineData: avgPizzasSparkline,
-      category: 'operational',
-    },
-  ];
-};
-
-// Daily trend for total orders & revenue
+// Daily trend for total orders & revenue (Sunday to Saturday)
 export const computeDailyTrends = (records: PizzaRecord[]): DailyTrendItem[] => {
   const dayMap: Record<string, { orderSet: Set<number>; revenue: number; pizzas: number }> = {};
-  const totalOrdersAll = computeKPIMetrics(records).totalOrders;
   
   DAYS_ORDER.forEach((day) => {
     dayMap[day] = { orderSet: new Set(), revenue: 0, pizzas: 0 };
@@ -215,25 +138,20 @@ export const computeDailyTrends = (records: PizzaRecord[]): DailyTrendItem[] => 
     }
   });
 
-  return DAYS_ORDER.map((day, idx) => {
-    const ordersCount = dayMap[day].orderSet.size;
-    const pct = totalOrdersAll > 0 ? (ordersCount / totalOrdersAll) * 100 : 0;
-    return {
-      day,
-      shortDay: SHORT_DAYS[idx],
-      orders: ordersCount,
-      revenue: dayMap[day].revenue,
-      pizzas: dayMap[day].pizzas,
-      pctOfTotal: pct,
-    };
-  });
+  return DAYS_ORDER.map((day, idx) => ({
+    day,
+    shortDay: SHORT_DAYS[idx],
+    orders: dayMap[day].orderSet.size,
+    revenue: dayMap[day].revenue,
+    pizzas: dayMap[day].pizzas,
+  }));
 };
 
-// Hourly trend for total orders & revenue
+// Hourly trend for total orders (Hours 10 to 23)
 export const computeHourlyTrends = (records: PizzaRecord[]): HourlyTrendItem[] => {
   const hourMap: Record<number, { orderSet: Set<number>; revenue: number; pizzas: number }> = {};
 
-  for (let h = 9; h <= 23; h++) {
+  for (let h = 10; h <= 23; h++) {
     hourMap[h] = { orderSet: new Set(), revenue: 0, pizzas: 0 };
   }
 
@@ -246,55 +164,19 @@ export const computeHourlyTrends = (records: PizzaRecord[]): HourlyTrendItem[] =
   });
 
   const result: HourlyTrendItem[] = [];
-  for (let h = 9; h <= 23; h++) {
-    const period = h >= 12 ? (h === 12 ? '12 PM' : `${h - 12} PM`) : `${h} AM`;
-    const ordersCount = hourMap[h].orderSet.size;
-    // Lunch peak (12-13) or Dinner peak (17-19)
-    const isPeak = (h === 12 || h === 13 || h === 17 || h === 18);
-
+  for (let h = 10; h <= 23; h++) {
     result.push({
       hour: h,
-      hourLabel: period,
-      orders: ordersCount,
+      orders: hourMap[h].orderSet.size,
       revenue: hourMap[h].revenue,
       pizzas: hourMap[h].pizzas,
-      isPeak,
     });
   }
 
   return result;
 };
 
-// Monthly trend for total orders & revenue
-export const computeMonthlyTrends = (records: PizzaRecord[]): MonthlyTrendItem[] => {
-  const monthMap: Record<number, { orderSet: Set<number>; revenue: number; pizzas: number }> = {};
-
-  for (let m = 1; m <= 12; m++) {
-    monthMap[m] = { orderSet: new Set(), revenue: 0, pizzas: 0 };
-  }
-
-  records.forEach((r) => {
-    if (monthMap[r.monthNum]) {
-      monthMap[r.monthNum].orderSet.add(r.orderId);
-      monthMap[r.monthNum].revenue += r.totalPrice;
-      monthMap[r.monthNum].pizzas += r.quantity;
-    }
-  });
-
-  return MONTH_NAMES.map((month, idx) => {
-    const mNum = idx + 1;
-    return {
-      monthNum: mNum,
-      month,
-      shortMonth: SHORT_MONTHS[idx],
-      orders: monthMap[mNum].orderSet.size,
-      revenue: monthMap[mNum].revenue,
-      pizzas: monthMap[mNum].pizzas,
-    };
-  });
-};
-
-// Category distribution (% of total sales & pizza count)
+// Category distribution (% of total sales & quantity)
 export const computeCategoryDistribution = (records: PizzaRecord[]): CategoryDistributionItem[] => {
   const totalRevenue = records.reduce((sum, r) => sum + r.totalPrice, 0);
   const catMap: Record<string, { revenue: number; quantity: number; orderSet: Set<number> }> = {};
@@ -308,22 +190,20 @@ export const computeCategoryDistribution = (records: PizzaRecord[]): CategoryDis
     catMap[r.category].orderSet.add(r.orderId);
   });
 
-  const categoriesOrder = ['Classic', 'Supreme', 'Chicken', 'Veggie'];
+  // Exactly match Power BI legend order in screenshot: Chicken, Classic, Supreme, Veggie
+  const categoriesOrder = ['Chicken', 'Classic', 'Supreme', 'Veggie'];
   
   return categoriesOrder
     .filter((cat) => catMap[cat])
     .map((cat) => {
       const rev = catMap[cat].revenue;
-      const ordersCount = catMap[cat].orderSet.size;
       const pct = totalRevenue > 0 ? (rev / totalRevenue) * 100 : 0;
-      const aov = ordersCount > 0 ? rev / ordersCount : 0;
       return {
         category: cat,
         revenue: rev,
         quantity: catMap[cat].quantity,
-        orders: ordersCount,
+        orders: catMap[cat].orderSet.size,
         percentage: pct,
-        avgOrderValue: aov,
       };
     });
 };
@@ -334,11 +214,11 @@ export const computeSizeDistribution = (records: PizzaRecord[]): SizeDistributio
   const sizeMap: Record<string, { revenue: number; quantity: number; orderSet: Set<number> }> = {};
 
   const sizeLabels: Record<string, string> = {
-    S: 'Regular (S)',
-    M: 'Medium (M)',
-    L: 'Large (L)',
-    XL: 'X-Large (XL)',
-    XXL: 'XX-Large (XXL)',
+    L: 'Large',
+    M: 'Medium',
+    S: 'Regular',
+    XL: 'X-Large',
+    XXL: 'XX-Large',
   };
 
   records.forEach((r) => {
@@ -350,6 +230,7 @@ export const computeSizeDistribution = (records: PizzaRecord[]): SizeDistributio
     sizeMap[r.size].orderSet.add(r.orderId);
   });
 
+  // Exactly match Power BI legend order: Large, Medium, Regular, X-Large, XX-Large
   const sizesOrder = ['L', 'M', 'S', 'XL', 'XXL'];
 
   return sizesOrder
@@ -368,9 +249,8 @@ export const computeSizeDistribution = (records: PizzaRecord[]): SizeDistributio
     });
 };
 
-// Pizza performance for Top 5 / Bottom 5 analysis
+// Pizza performance for Top 5 / Bottom 5 analysis by Quantity
 export const computePizzaPerformance = (records: PizzaRecord[]): PizzaPerformanceItem[] => {
-  const totalRev = records.reduce((sum, r) => sum + r.totalPrice, 0);
   const pizzaMap: Record<string, { category: string; revenue: number; quantity: number; orderSet: Set<number> }> = {};
 
   records.forEach((r) => {
@@ -384,73 +264,12 @@ export const computePizzaPerformance = (records: PizzaRecord[]): PizzaPerformanc
 
   return Object.keys(pizzaMap).map((name) => {
     const item = pizzaMap[name];
-    const avgPrice = item.quantity > 0 ? item.revenue / item.quantity : 0;
-    const share = totalRev > 0 ? (item.revenue / totalRev) * 100 : 0;
     return {
       name,
       category: item.category,
       revenue: item.revenue,
       quantity: item.quantity,
       orders: item.orderSet.size,
-      avgUnitPrice: avgPrice,
-      revenueShare: share,
     };
   });
-};
-
-// Intelligence Signals Generator (Executive Level Findings)
-export const generateIntelligenceSignals = (
-  records: PizzaRecord[],
-  kpis: KPIMetrics
-): IntelligenceSignal[] => {
-  if (records.length === 0) return [];
-
-  const catDist = computeCategoryDistribution(records);
-  const sizeDist = computeSizeDistribution(records);
-  const dailyTrends = computeDailyTrends(records);
-  const hourlyTrends = computeHourlyTrends(records);
-  const pizzaPerf = computePizzaPerformance(records);
-
-  const topCategory = [...catDist].sort((a, b) => b.revenue - a.revenue)[0];
-  const topSize = [...sizeDist].sort((a, b) => b.revenue - a.revenue)[0];
-  const peakDay = [...dailyTrends].sort((a, b) => b.orders - a.orders)[0];
-  const peakHour = [...hourlyTrends].sort((a, b) => b.orders - a.orders)[0];
-
-  const topPizzaRev = [...pizzaPerf].sort((a, b) => b.revenue - a.revenue)[0];
-  const lowestPizzaQty = [...pizzaPerf].sort((a, b) => a.quantity - b.quantity)[0];
-
-  return [
-    {
-      id: 'sig-1',
-      category: 'Signal',
-      title: 'Category Revenue Leader',
-      insight: `The ${topCategory?.category} category leads overall performance generated $${formatCurrency(topCategory?.revenue || 0)} (${formatPercent(topCategory?.percentage || 0)} share), driven by high ticket sales.`,
-      impactMetric: `${formatPercent(topCategory?.percentage || 0)} Revenue`,
-      status: 'positive',
-    },
-    {
-      id: 'sig-2',
-      category: 'Opportunity',
-      title: 'Size Concentration Index',
-      insight: `Large (L) size pizzas generate ${formatPercent(topSize?.percentage || 0)} of revenue ($${formatCurrency(topSize?.revenue || 0)}). XL and XXL combined contribute under 2% of sales.`,
-      impactMetric: `${topSize?.sizeLabel} Dominant`,
-      status: 'highlight',
-    },
-    {
-      id: 'sig-3',
-      category: 'Trend',
-      title: 'Peak Demand Windows',
-      insight: `Order spikes heavily on ${peakDay?.day}s (${formatNumber(peakDay?.orders || 0)} orders) and during lunch (${peakHour?.hourLabel}). Staffing & inventory should align to these peak windows.`,
-      impactMetric: `${peakDay?.day} @ ${peakHour?.hourLabel}`,
-      status: 'neutral',
-    },
-    {
-      id: 'sig-4',
-      category: 'Anomaly',
-      title: 'Menu Volume Dispersion',
-      insight: `Top SKU ${topPizzaRev?.name} generated $${formatCurrency(topPizzaRev?.revenue || 0)}, whereas ${lowestPizzaQty?.name} recorded only ${lowestPizzaQty?.quantity} units sold.`,
-      impactMetric: `Top vs Bottom Gap`,
-      status: 'warning',
-    },
-  ];
 };

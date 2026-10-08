@@ -3,26 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --background: #080c14;
-  --surface-card: #0e1422;
-  --surface-border: #1e293b;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --accent-amber: #f59e0b;
-  --accent-blue: #3b82f6;
-  --accent-emerald: #10b981;
+  --background-dark: #120907;
+  --pbi-brown-card: #562316;
+  --pbi-brown-header: #6d2d1d;
+  --pbi-brown-border: #7f3724;
+  --pbi-cyan: #0080a8;
+  --pbi-orange: #d9531e;
+  --pbi-text-cyan: #38bdf8;
 }
 
 body {
-  color: var(--text-primary);
-  background-color: var(--background);
-  background-image: 
-    radial-gradient(circle at 50% 0%, rgba(30, 41, 59, 0.25) 0%, transparent 60%),
-    radial-gradient(circle at 90% 20%, rgba(245, 158, 11, 0.03) 0%, transparent 40%);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  color: #ffffff;
+  background-color: var(--background-dark);
+  background-image: linear-gradient(rgba(18, 9, 7, 0.75), rgba(18, 9, 7, 0.85)), url('/delicious-pizza-studio.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom Scrollbars */
@@ -32,37 +31,55 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #080c14;
+  background: #120907;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 9999px;
+  background: #562316;
+  border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+/* Power BI Card Styles */
+.pbi-card {
+  background-color: rgba(86, 35, 22, 0.92);
+  border: 1px solid #7f3724;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* Glass & Card depth utilities */
-.intel-card {
-  background-color: rgba(14, 20, 34, 0.85);
-  border: 1px solid rgba(30, 41, 59, 0.7);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
+.pbi-card-title {
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.intel-card-hover {
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+.pbi-[#0080a8] {
+  color: #0080a8;
 }
 
-.intel-card-hover:hover {
-  border-color: rgba(71, 85, 105, 0.8);
-  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  transform: translateY(-1px);
+/* Custom table styling for Daily Trend Matrix */
+.pbi-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  text-align: center;
+  border: 1px solid #7f3724;
 }
 
-/* Monospace font numbers styling */
-.font-numeric {
-  font-feature-settings: "tnum" 1, "lnum" 1;
+.pbi-matrix-table th {
+  background-color: #6d2d1d;
+  color: #e2e8f0;
+  padding: 2px 4px;
+  border: 1px solid #7f3724;
+  font-weight: 600;
+}
+
+.pbi-matrix-table td {
+  background-color: #44190e;
+  color: #ffffff;
+  padding: 2px 4px;
+  border: 1px solid #7f3724;
+  font-family: monospace;
 }
