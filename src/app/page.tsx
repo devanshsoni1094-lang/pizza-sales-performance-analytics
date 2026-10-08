@@ -24,11 +24,10 @@ import {
   computeCategoryDistribution,
   computeSizeDistribution,
   computePizzaPerformance,
-  generateIntelligenceSignals,
 } from '@/utils/analyticsEngine';
 
-// Default filters: All 2015 by default for full $817,860.05 executive view,
-// with 1-click toggle to Apr 2015 ($68.7K) in the filter bar!
+// Default filters: All 2015 by default ($817,860.05),
+// with 1-click toggle to Apr 2015 ($68,737) in the filter bar!
 const initialFilters: FilterState = {
   category: 'All',
   size: 'All',
@@ -63,7 +62,6 @@ export default function Home() {
   const categoryDist = useMemo(() => computeCategoryDistribution(filteredRecords), [filteredRecords]);
   const sizeDist = useMemo(() => computeSizeDistribution(filteredRecords), [filteredRecords]);
   const pizzaPerf = useMemo(() => computePizzaPerformance(filteredRecords), [filteredRecords]);
-  const intelligenceSignals = useMemo(() => generateIntelligenceSignals(filteredRecords, kpiMetrics), [filteredRecords, kpiMetrics]);
 
   const categories = ['Classic', 'Veggie', 'Supreme', 'Chicken'];
   const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
@@ -109,7 +107,7 @@ export default function Home() {
       {/* Main Container */}
       <main className="max-w-[1536px] mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6 flex-1 space-y-6">
         
-        {/* Compact Filter Slicer Bar */}
+        {/* Compact Dimension Filter Slicer Bar */}
         <FilterBar
           filters={filters}
           setFilters={setFilters}
@@ -159,13 +157,13 @@ export default function Home() {
               />
             </div>
 
-            {/* Executive Intelligence Signals */}
-            <KeyInsights signals={intelligenceSignals} />
+            {/* Executive Insights Matching Exact Power BI Report */}
+            <KeyInsights />
 
           </div>
         )}
 
-        {/* TAB 2: MENU INTELLIGENCE */}
+        {/* TAB 2: MENU INTELLIGENCE (BEST & WORST SELLERS) */}
         {activeTab === 'sellers' && (
           <BestWorstSellers data={pizzaPerf} />
         )}
