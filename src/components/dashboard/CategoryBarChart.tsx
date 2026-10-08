@@ -37,19 +37,19 @@ export const CategoryBarChart: React.FC<CategoryBarChartProps> = ({
     if (active && payload && payload.length) {
       const item: CategoryDistributionItem = payload[0].payload;
       return (
-        <div className="bg-slate-900 border border-slate-700 p-3 rounded-lg shadow-xl text-xs space-y-1">
-          <p className="font-bold text-amber-400 text-sm">{item.category} Category</p>
-          <div className="flex justify-between gap-4 text-slate-300">
+        <div className="bg-[#0b101d] border border-slate-700/80 p-3.5 rounded-xl shadow-2xl text-xs space-y-1.5 backdrop-blur-md font-sans">
+          <p className="font-bold text-amber-400 font-mono text-sm">{item.category} Category</p>
+          <div className="flex justify-between gap-5 text-slate-300">
             <span>Total Pizzas Sold:</span>
-            <span className="font-semibold text-emerald-400">{formatNumber(item.quantity)}</span>
+            <span className="font-semibold text-emerald-400 font-numeric">{formatNumber(item.quantity)}</span>
           </div>
-          <div className="flex justify-between gap-4 text-slate-300">
+          <div className="flex justify-between gap-5 text-slate-300">
             <span>Total Revenue:</span>
-            <span className="font-semibold text-amber-400">{formatCurrency(item.revenue)}</span>
+            <span className="font-semibold text-amber-400 font-numeric">{formatCurrency(item.revenue)}</span>
           </div>
-          <div className="flex justify-between gap-4 text-slate-300">
-            <span>Total Orders:</span>
-            <span className="font-semibold text-white">{formatNumber(item.orders)}</span>
+          <div className="flex justify-between gap-5 text-slate-300">
+            <span>Distinct Orders:</span>
+            <span className="font-semibold text-white font-numeric">{formatNumber(item.orders)}</span>
           </div>
         </div>
       );
@@ -58,30 +58,30 @@ export const CategoryBarChart: React.FC<CategoryBarChartProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-md flex flex-col justify-between h-full">
+    <div className="intel-card intel-card-hover rounded-2xl p-5 flex flex-col justify-between h-full">
       
       {/* Header */}
-      <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800">
-        <div className="flex items-center space-x-2">
-          <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+      <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-800/80">
+        <div className="flex items-center space-x-2.5">
+          <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             <ShoppingBag className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-              TOTAL PIZZAS SOLD BY PIZZA CATEGORY
+            <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-slate-200">
+              PIZZAS SOLD BY CATEGORY
             </h3>
-            <p className="text-[10px] text-slate-400">Volume distribution by category</p>
+            <p className="text-[11px] text-slate-400 font-normal">Volume units per pizza category</p>
           </div>
         </div>
       </div>
 
-      {/* Bar Chart */}
-      <div className="w-full h-52">
+      {/* Horizontal Bar Canvas */}
+      <div className="w-full h-56">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
             layout="vertical"
-            margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+            margin={{ top: 10, right: 20, left: 10, bottom: 5 }}
             onClick={(state) => {
               if (state && state.activePayload && state.activePayload.length) {
                 const clickedCat = state.activePayload[0].payload.category;
@@ -89,19 +89,19 @@ export const CategoryBarChart: React.FC<CategoryBarChartProps> = ({
               }
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
-            <XAxis type="number" stroke="#94a3b8" fontSize={11} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="2 4" stroke="#1e293b" horizontal={false} />
+            <XAxis type="number" stroke="#64748b" fontSize={11} axisLine={false} tickLine={false} />
             <YAxis
               dataKey="category"
               type="category"
-              stroke="#94a3b8"
+              stroke="#64748b"
               fontSize={11}
               axisLine={false}
               tickLine={false}
               width={65}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="quantity" radius={[0, 4, 4, 0]} cursor="pointer">
+            <Bar dataKey="quantity" radius={[0, 6, 6, 0]} cursor="pointer">
               {data.map((entry) => {
                 const isSelected = selectedCategory === entry.category;
                 const baseColor = CATEGORY_COLORS[entry.category] || '#10b981';

@@ -36,22 +36,29 @@ export const HourlyMonthlyChart: React.FC<HourlyMonthlyChartProps> = ({
       const title = isHourly ? `Hour: ${data.hourLabel}` : `Month: ${data.month}`;
 
       return (
-        <div className="bg-slate-900 border border-slate-700 p-3 rounded-lg shadow-xl text-xs space-y-1">
-          <p className="font-bold text-amber-400 text-sm">{title}</p>
-          <div className="flex justify-between gap-4 text-slate-300">
+        <div className="bg-[#0b101d] border border-slate-700/80 p-3.5 rounded-xl shadow-2xl text-xs space-y-1.5 backdrop-blur-md font-sans">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <span className="font-bold text-amber-400 text-sm font-mono">{title}</span>
+            {isHourly && data.isPeak && (
+              <span className="text-[10px] bg-amber-500/20 text-amber-400 font-mono px-2 py-0.5 rounded font-bold">
+                PEAK HOUR
+              </span>
+            )}
+          </div>
+          <div className="flex justify-between gap-5 text-slate-300">
             <span>Total Orders:</span>
-            <span className="font-semibold text-white">{formatNumber(data.orders)}</span>
+            <span className="font-semibold text-white font-numeric">{formatNumber(data.orders)}</span>
           </div>
-          <div className="flex justify-between gap-4 text-slate-300">
+          <div className="flex justify-between gap-5 text-slate-300">
             <span>Total Revenue:</span>
-            <span className="font-semibold text-amber-400">{formatCurrency(data.revenue)}</span>
+            <span className="font-semibold text-amber-400 font-numeric">{formatCurrency(data.revenue)}</span>
           </div>
-          <div className="flex justify-between gap-4 text-slate-300">
+          <div className="flex justify-between gap-5 text-slate-300">
             <span>Pizzas Sold:</span>
-            <span className="font-semibold text-emerald-400">{formatNumber(data.pizzas)}</span>
+            <span className="font-semibold text-emerald-400 font-numeric">{formatNumber(data.pizzas)}</span>
           </div>
           {!isHourly && (
-            <p className="text-[10px] text-slate-500 pt-1 border-t border-slate-800">
+            <p className="text-[10px] text-slate-400 pt-1 border-t border-slate-800 font-mono">
               Click to filter by {data.month}
             </p>
           )}
@@ -62,32 +69,32 @@ export const HourlyMonthlyChart: React.FC<HourlyMonthlyChartProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-md flex flex-col justify-between h-full">
+    <div className="intel-card intel-card-hover rounded-2xl p-5 flex flex-col justify-between h-full">
       
       {/* Visual Header & View Switcher */}
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
-        <div className="flex items-center space-x-2">
-          <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400">
+      <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-800/80">
+        <div className="flex items-center space-x-2.5">
+          <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
             <TrendingUp className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+            <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-slate-200">
               {viewMode === 'hourly' ? 'HOURLY TREND FOR TOTAL ORDERS' : 'MONTHLY TREND FOR TOTAL ORDERS'}
             </h3>
-            <p className="text-[10px] text-slate-400">
-              {viewMode === 'hourly' ? 'Peak operating hours (9 AM - 11 PM)' : 'Full 2015 monthly performance'}
+            <p className="text-[11px] text-slate-400 font-normal">
+              {viewMode === 'hourly' ? 'Operating hours volume curve (9 AM - 11 PM)' : 'Full 2015 annual sales trajectory'}
             </p>
           </div>
         </div>
 
-        {/* View Mode Toggle Buttons */}
-        <div className="flex items-center bg-slate-800 p-0.5 rounded-lg border border-slate-700">
+        {/* View Mode Toggle */}
+        <div className="flex items-center bg-[#111728] p-1 rounded-xl border border-slate-800">
           <button
             onClick={() => setViewMode('hourly')}
-            className={`flex items-center space-x-1 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+            className={`flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
               viewMode === 'hourly'
                 ? 'bg-amber-500 text-slate-950 font-bold shadow'
-                : 'text-slate-400 hover:text-white'
+                : 'text-slate-400 hover:text-slate-200'
             }`}
           >
             <Clock className="w-3 h-3" />
@@ -95,10 +102,10 @@ export const HourlyMonthlyChart: React.FC<HourlyMonthlyChartProps> = ({
           </button>
           <button
             onClick={() => setViewMode('monthly')}
-            className={`flex items-center space-x-1 px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+            className={`flex items-center space-x-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
               viewMode === 'monthly'
                 ? 'bg-amber-500 text-slate-950 font-bold shadow'
-                : 'text-slate-400 hover:text-white'
+                : 'text-slate-400 hover:text-slate-200'
             }`}
           >
             <Calendar className="w-3 h-3" />
@@ -107,12 +114,12 @@ export const HourlyMonthlyChart: React.FC<HourlyMonthlyChartProps> = ({
         </div>
       </div>
 
-      {/* Chart Area */}
-      <div className="w-full h-56">
+      {/* Chart Canvas */}
+      <div className="w-full h-60">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={viewMode === 'hourly' ? hourlyData : monthlyData}
-            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            margin={{ top: 12, right: 10, left: -20, bottom: 0 }}
             onClick={(state) => {
               if (viewMode === 'monthly' && state && state.activePayload && state.activePayload.length) {
                 const clickedMonth = state.activePayload[0].payload.month;
@@ -122,20 +129,20 @@ export const HourlyMonthlyChart: React.FC<HourlyMonthlyChartProps> = ({
           >
             <defs>
               <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.5} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.45} />
+                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.02} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+            <CartesianGrid strokeDasharray="2 4" stroke="#1e293b" vertical={false} />
             <XAxis
               dataKey={viewMode === 'hourly' ? 'hourLabel' : 'shortMonth'}
-              stroke="#94a3b8"
+              stroke="#64748b"
               fontSize={11}
               tickLine={false}
-              axisLine={{ stroke: '#475569' }}
+              axisLine={{ stroke: '#334155' }}
             />
             <YAxis
-              stroke="#94a3b8"
+              stroke="#64748b"
               fontSize={11}
               tickLine={false}
               axisLine={false}
@@ -146,7 +153,7 @@ export const HourlyMonthlyChart: React.FC<HourlyMonthlyChartProps> = ({
               type="monotone"
               dataKey="orders"
               stroke="#3b82f6"
-              strokeWidth={2}
+              strokeWidth={2.5}
               fillOpacity={1}
               fill="url(#colorOrders)"
             />
@@ -155,16 +162,16 @@ export const HourlyMonthlyChart: React.FC<HourlyMonthlyChartProps> = ({
       </div>
 
       {/* Visual Footer Note */}
-      <div className="mt-2 text-[10px] text-slate-500 flex items-center justify-between border-t border-slate-800/80 pt-2">
+      <div className="mt-3 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800/80 pt-2.5 font-mono">
         <span>
           {viewMode === 'hourly' ? (
-            <>Peak hour spikes: <strong className="text-amber-400">12:00 PM - 1:00 PM</strong> & <strong className="text-amber-400">6:00 PM - 7:00 PM</strong></>
+            <>Peak hour spikes: <strong className="text-amber-400 font-bold">12:00 PM – 1:00 PM (Lunch)</strong> & <strong className="text-amber-400 font-bold">6:00 PM – 7:00 PM (Dinner)</strong></>
           ) : (
-            <>Highest revenue month: <strong className="text-amber-400">July ($72.5K)</strong></>
+            <>Highest revenue month: <strong className="text-amber-400 font-bold">July ($72.5K)</strong></>
           )}
         </span>
-        <span className="font-mono text-slate-400">
-          {viewMode === 'hourly' ? '15 Hours' : '12 Months'}
+        <span className="text-[10px] text-slate-400">
+          {viewMode === 'hourly' ? '15 Operating Hours' : '12 Months'}
         </span>
       </div>
 

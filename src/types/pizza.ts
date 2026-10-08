@@ -28,6 +28,19 @@ export interface FilterState {
   searchTerm: string;
 }
 
+export interface KPIMetricCard {
+  id: string;
+  title: string;
+  value: string;
+  rawValue: number;
+  change: string;
+  changeType: 'positive' | 'negative' | 'neutral';
+  comparisonText: string;
+  daxFormula: string;
+  sparklineData: number[];
+  category: 'financial' | 'operational' | 'volume';
+}
+
 export interface KPIMetrics {
   totalRevenue: number;
   averageOrderValue: number;
@@ -42,6 +55,7 @@ export interface DailyTrendItem {
   orders: number;
   revenue: number;
   pizzas: number;
+  pctOfTotal: number;
 }
 
 export interface HourlyTrendItem {
@@ -50,6 +64,7 @@ export interface HourlyTrendItem {
   orders: number;
   revenue: number;
   pizzas: number;
+  isPeak: boolean;
 }
 
 export interface MonthlyTrendItem {
@@ -67,6 +82,7 @@ export interface CategoryDistributionItem {
   quantity: number;
   orders: number;
   percentage: number;
+  avgOrderValue: number;
 }
 
 export interface SizeDistributionItem {
@@ -85,12 +101,14 @@ export interface PizzaPerformanceItem {
   quantity: number;
   orders: number;
   avgUnitPrice: number;
+  revenueShare: number;
 }
 
-export interface BusinessInsight {
+export interface IntelligenceSignal {
   id: string;
+  category: 'Signal' | 'Anomaly' | 'Opportunity' | 'Trend';
   title: string;
-  description: string;
-  type: 'positive' | 'warning' | 'info' | 'highlight';
-  metric: string;
+  insight: string;
+  impactMetric: string;
+  status: 'positive' | 'warning' | 'neutral' | 'highlight';
 }

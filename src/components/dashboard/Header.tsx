@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Pizza, LayoutDashboard, Trophy, Table, RotateCcw, Filter, Sparkles } from 'lucide-react';
+import { LayoutDashboard, Trophy, Table, RotateCcw, Activity } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: 'executive' | 'sellers' | 'explorer';
@@ -21,87 +21,90 @@ export const Header: React.FC<HeaderProps> = ({
   onResetFilters,
 }) => {
   return (
-    <header className="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between py-3 gap-3">
+    <header className="bg-[#0b101d]/90 border-b border-slate-800/80 text-white sticky top-0 z-50 backdrop-blur-md">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between py-3.5 gap-3">
           
-          {/* Brand & Title */}
-          <div className="flex items-center space-x-3">
-            <div className="bg-amber-500/20 p-2.5 rounded-xl border border-amber-500/30 text-amber-400">
-              <Pizza className="w-7 h-7 animate-pulse" />
+          {/* Product Brand & Title */}
+          <div className="flex items-center space-x-3.5">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-extrabold text-sm font-mono shadow-inner">
+              PI
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-orange-300 to-amber-200 bg-clip-text text-transparent">
-                  PIZZA SALES ANALYSIS DASHBOARD
+              <div className="flex items-center space-x-2.5">
+                <h1 className="text-base font-bold tracking-tight text-white font-sans">
+                  PIZZA SALES <span className="text-amber-400 font-mono font-medium text-xs ml-1 px-1.5 py-0.5 bg-amber-500/10 rounded border border-amber-500/20">ENTERPRISE BI</span>
                 </h1>
-                <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full">
-                  Power BI Web App
+                <span className="hidden sm:inline-flex items-center space-x-1.5 px-2 py-0.5 text-[10px] font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Real-Time Dax Engine</span>
                 </span>
               </div>
-              <p className="text-xs text-slate-400">
-                Interactive Business Intelligence & Operational Analytics
+              <p className="text-[11px] text-slate-400 tracking-wide font-normal">
+                Executive Business Intelligence & Financial Operations System
               </p>
             </div>
           </div>
 
-          {/* Navigation Tabs & Active Filter Status */}
-          <div className="flex flex-wrap items-center justify-between md:justify-end gap-2">
-            <nav className="flex items-center bg-slate-800/80 p-1 rounded-lg border border-slate-700/60">
+          {/* Navigation Tabs & Live Dataset Status */}
+          <div className="flex flex-wrap items-center justify-between md:justify-end gap-3">
+            
+            <nav className="flex items-center bg-[#111728] p-1 rounded-xl border border-slate-800/90 shadow-inner">
               <button
                 onClick={() => setActiveTab('executive')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   activeTab === 'executive'
-                    ? 'bg-amber-500 text-slate-950 font-semibold shadow-sm'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                    ? 'bg-amber-500 text-slate-950 shadow-md font-bold'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                 }`}
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
-                <span>Home / Overview</span>
+                <span>Executive Overview</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('sellers')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   activeTab === 'sellers'
-                    ? 'bg-amber-500 text-slate-950 font-semibold shadow-sm'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                    ? 'bg-amber-500 text-slate-950 shadow-md font-bold'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                 }`}
               >
                 <Trophy className="w-3.5 h-3.5" />
-                <span>Best & Worst Sellers</span>
+                <span>Menu Intelligence</span>
               </button>
 
               <button
                 onClick={() => setActiveTab('explorer')}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   activeTab === 'explorer'
-                    ? 'bg-amber-500 text-slate-950 font-semibold shadow-sm'
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                    ? 'bg-amber-500 text-slate-950 shadow-md font-bold'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                 }`}
               >
                 <Table className="w-3.5 h-3.5" />
-                <span>Data Explorer</span>
+                <span>Dataset Explorer</span>
               </button>
             </nav>
 
-            {/* Live Records Count Badge & Reset */}
+            {/* Live Data Badge & Reset Button */}
             <div className="flex items-center space-x-2">
-              <div className="px-2.5 py-1 bg-slate-800 text-slate-300 rounded-md border border-slate-700 text-xs font-mono">
-                <span className="text-amber-400 font-bold">{recordCount.toLocaleString()}</span> / {totalRecords.toLocaleString()} rows
+              <div className="px-3 py-1 bg-[#111728] text-slate-300 rounded-lg border border-slate-800/90 text-xs font-mono flex items-center space-x-2">
+                <Activity className="w-3.5 h-3.5 text-amber-400" />
+                <span><strong className="text-white font-bold">{recordCount.toLocaleString()}</strong> / {totalRecords.toLocaleString()} rows</span>
               </div>
 
               {hasActiveFilters && (
                 <button
                   onClick={onResetFilters}
-                  className="flex items-center space-x-1 px-2.5 py-1 bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 rounded-md text-xs font-medium transition"
-                  title="Clear all active slicers"
+                  className="flex items-center space-x-1.5 px-3 py-1 bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/30 rounded-lg text-xs font-semibold transition"
                 >
                   <RotateCcw className="w-3 h-3" />
-                  <span>Reset Filters</span>
+                  <span>Reset Slicers</span>
                 </button>
               )}
             </div>
+
           </div>
 
         </div>

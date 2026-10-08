@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Filter, Calendar, Search, RotateCcw, X, Layers, Tag } from 'lucide-react';
+import { SlidersHorizontal, Calendar, Search, RotateCcw, X, Layers, Tag } from 'lucide-react';
 import { FilterState } from '@/types/pizza';
 
 interface FilterBarProps {
@@ -44,45 +44,40 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     setFilters((prev) => ({ ...prev, size: sz }));
   };
 
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilters((prev) => ({ ...prev, month: e.target.value }));
-  };
-
-  const handleDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilters((prev) => ({ ...prev, day: e.target.value }));
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters((prev) => ({ ...prev, searchTerm: e.target.value }));
-  };
-
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 mb-6 shadow-md backdrop-blur-sm">
+    <div className="intel-card rounded-2xl p-4 mb-6">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         
-        {/* Slicers Header */}
-        <div className="flex items-center space-x-2 text-xs font-semibold text-slate-400 border-b lg:border-b-0 lg:border-r border-slate-800 pb-2 lg:pb-0 lg:pr-4">
-          <Filter className="w-4 h-4 text-amber-400" />
-          <span>POWER BI SLICERS</span>
-          {activeCount > 0 && (
-            <span className="bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded-full text-[10px] font-bold">
-              {activeCount} active
-            </span>
-          )}
+        {/* Label & Indicator */}
+        <div className="flex items-center space-x-2.5 text-xs font-semibold text-slate-400 border-b lg:border-b-0 lg:border-r border-slate-800/80 pb-2.5 lg:pb-0 lg:pr-5 shrink-0">
+          <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <SlidersHorizontal className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-300 font-bold">DIMENSION SLICERS</span>
+              {activeCount > 0 && (
+                <span className="bg-amber-500 text-slate-950 px-1.5 py-0.2 rounded-md text-[10px] font-bold font-mono">
+                  {activeCount} active
+                </span>
+              )}
+            </div>
+            <p className="text-[10px] text-slate-400 font-normal">Cross-filter all DAX metrics</p>
+          </div>
         </div>
 
-        {/* Filters Controls Grid */}
+        {/* Controls Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 flex-1">
           
-          {/* Category Quick Pills */}
+          {/* Category */}
           <div>
-            <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+            <label className="block text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
               <Layers className="w-3 h-3 text-amber-400" /> Category
             </label>
             <select
               value={filters.category}
               onChange={(e) => handleCategoryChange(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+              className="w-full bg-[#111728] border border-slate-800 text-slate-200 text-xs rounded-xl px-3 py-2 focus:ring-1 focus:ring-amber-500 focus:border-amber-500 font-medium cursor-pointer hover:border-slate-700 transition"
             >
               <option value="All">All Categories</option>
               {categories.map((cat) => (
@@ -93,15 +88,15 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             </select>
           </div>
 
-          {/* Size Dropdown */}
+          {/* Size */}
           <div>
-            <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+            <label className="block text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
               <Tag className="w-3 h-3 text-blue-400" /> Size
             </label>
             <select
               value={filters.size}
               onChange={(e) => handleSizeChange(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+              className="w-full bg-[#111728] border border-slate-800 text-slate-200 text-xs rounded-xl px-3 py-2 focus:ring-1 focus:ring-amber-500 focus:border-amber-500 font-medium cursor-pointer hover:border-slate-700 transition"
             >
               <option value="All">All Sizes</option>
               {sizes.map((sz) => (
@@ -112,15 +107,15 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             </select>
           </div>
 
-          {/* Month Dropdown */}
+          {/* Month */}
           <div>
-            <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
-              <Calendar className="w-3 h-3 text-green-400" /> Month
+            <label className="block text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+              <Calendar className="w-3 h-3 text-emerald-400" /> Month
             </label>
             <select
               value={filters.month}
-              onChange={handleMonthChange}
-              className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+              onChange={(e) => setFilters((p) => ({ ...p, month: e.target.value }))}
+              className="w-full bg-[#111728] border border-slate-800 text-slate-200 text-xs rounded-xl px-3 py-2 focus:ring-1 focus:ring-amber-500 focus:border-amber-500 font-medium cursor-pointer hover:border-slate-700 transition"
             >
               {MONTHS.map((m) => (
                 <option key={m} value={m}>
@@ -130,15 +125,15 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             </select>
           </div>
 
-          {/* Day Dropdown */}
+          {/* Day */}
           <div>
-            <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+            <label className="block text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
               <Calendar className="w-3 h-3 text-purple-400" /> Day of Week
             </label>
             <select
               value={filters.day}
-              onChange={handleDayChange}
-              className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+              onChange={(e) => setFilters((p) => ({ ...p, day: e.target.value }))}
+              className="w-full bg-[#111728] border border-slate-800 text-slate-200 text-xs rounded-xl px-3 py-2 focus:ring-1 focus:ring-amber-500 focus:border-amber-500 font-medium cursor-pointer hover:border-slate-700 transition"
             >
               {DAYS.map((d) => (
                 <option key={d} value={d}>
@@ -148,24 +143,24 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             </select>
           </div>
 
-          {/* Search Box */}
+          {/* Search */}
           <div>
-            <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+            <label className="block text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
               <Search className="w-3 h-3 text-amber-400" /> Search Pizza
             </label>
             <div className="relative">
               <input
                 type="text"
                 value={filters.searchTerm}
-                onChange={handleSearchChange}
-                placeholder="e.g. Hawaiian, Thai..."
-                className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg pl-8 pr-2.5 py-1.5 focus:ring-1 focus:ring-amber-500 focus:border-amber-500"
+                onChange={(e) => setFilters((p) => ({ ...p, searchTerm: e.target.value }))}
+                placeholder="Search Hawaiian, Thai..."
+                className="w-full bg-[#111728] border border-slate-800 text-slate-200 text-xs rounded-xl pl-9 pr-3 py-2 focus:ring-1 focus:ring-amber-500 focus:border-amber-500 font-medium hover:border-slate-700 transition"
               />
-              <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2" />
+              <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
               {filters.searchTerm && (
                 <button
-                  onClick={() => setFilters((prev) => ({ ...prev, searchTerm: '' }))}
-                  className="absolute right-2 top-2 text-slate-400 hover:text-white"
+                  onClick={() => setFilters((p) => ({ ...p, searchTerm: '' }))}
+                  className="absolute right-2.5 top-2.5 text-slate-400 hover:text-white"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -177,47 +172,47 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
       </div>
 
-      {/* Active Filter Badges */}
+      {/* Applied Slicers Badges */}
       {activeCount > 0 && (
-        <div className="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-slate-800 text-xs">
-          <span className="text-[11px] text-slate-500 font-medium">Applied Slicers:</span>
+        <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-slate-800/80 text-xs">
+          <span className="text-[11px] font-mono text-slate-500 font-medium">Applied Slicers:</span>
           {filters.category !== 'All' && (
-            <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs">
-              <span>Category: {filters.category}</span>
+            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs font-medium">
+              <span>Category: <strong>{filters.category}</strong></span>
               <X className="w-3 h-3 cursor-pointer hover:text-white" onClick={() => handleCategoryChange('All')} />
             </span>
           )}
           {filters.size !== 'All' && (
-            <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 border border-blue-500/20 text-xs">
-              <span>Size: {filters.size}</span>
+            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-300 border border-blue-500/20 text-xs font-medium">
+              <span>Size: <strong>{filters.size}</strong></span>
               <X className="w-3 h-3 cursor-pointer hover:text-white" onClick={() => handleSizeChange('All')} />
             </span>
           )}
           {filters.month !== 'All' && (
-            <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-green-500/10 text-green-300 border border-green-500/20 text-xs">
-              <span>Month: {filters.month}</span>
-              <X className="w-3 h-3 cursor-pointer hover:text-white" onClick={() => setFilters(p => ({ ...p, month: 'All' }))} />
+            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 text-xs font-medium">
+              <span>Month: <strong>{filters.month}</strong></span>
+              <X className="w-3 h-3 cursor-pointer hover:text-white" onClick={() => setFilters((p) => ({ ...p, month: 'All' }))} />
             </span>
           )}
           {filters.day !== 'All' && (
-            <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20 text-xs">
-              <span>Day: {filters.day}</span>
-              <X className="w-3 h-3 cursor-pointer hover:text-white" onClick={() => setFilters(p => ({ ...p, day: 'All' }))} />
+            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-300 border border-purple-500/20 text-xs font-medium">
+              <span>Day: <strong>{filters.day}</strong></span>
+              <X className="w-3 h-3 cursor-pointer hover:text-white" onClick={() => setFilters((p) => ({ ...p, day: 'All' }))} />
             </span>
           )}
           {filters.searchTerm && (
-            <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs">
-              <span>Search: &quot;{filters.searchTerm}&quot;</span>
-              <X className="w-3 h-3 cursor-pointer hover:text-white" onClick={() => setFilters(p => ({ ...p, searchTerm: '' }))} />
+            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/20 text-xs font-medium">
+              <span>Query: <strong>&quot;{filters.searchTerm}&quot;</strong></span>
+              <X className="w-3 h-3 cursor-pointer hover:text-white" onClick={() => setFilters((p) => ({ ...p, searchTerm: '' }))} />
             </span>
           )}
 
           <button
             onClick={onReset}
-            className="text-[11px] text-amber-400 hover:underline flex items-center space-x-1 ml-auto"
+            className="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center space-x-1 ml-auto"
           >
             <RotateCcw className="w-3 h-3" />
-            <span>Clear All</span>
+            <span>Reset All</span>
           </button>
         </div>
       )}

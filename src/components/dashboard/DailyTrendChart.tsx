@@ -13,7 +13,7 @@ import {
 } from 'recharts';
 import { Calendar, Info } from 'lucide-react';
 import { DailyTrendItem } from '@/types/pizza';
-import { formatCurrency, formatNumber } from '@/utils/formatters';
+import { formatCurrency, formatNumber, formatPercent } from '@/utils/formatters';
 
 interface DailyTrendChartProps {
   data: DailyTrendItem[];
@@ -26,29 +26,31 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({
   selectedDay,
   onSelectDay,
 }) => {
-  // Find peak day
   const maxOrders = Math.max(...data.map((d) => d.orders), 1);
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const item: DailyTrendItem = payload[0].payload;
       return (
-        <div className="bg-slate-900 border border-slate-700 p-3 rounded-lg shadow-xl text-xs space-y-1">
-          <p className="font-bold text-amber-400 text-sm">{item.day}</p>
-          <div className="flex justify-between gap-4 text-slate-300">
+        <div className="bg-[#0b101d] border border-slate-700/80 p-3.5 rounded-xl shadow-2xl text-xs space-y-1.5 backdrop-blur-md">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
+            <span className="font-bold text-amber-400 text-sm font-mono">{item.day}</span>
+            <span className="text-[10px] text-slate-400 font-mono">{formatPercent(item.pctOfTotal)} of total</span>
+          </div>
+          <div className="flex justify-between gap-5 text-slate-300">
             <span>Total Orders:</span>
-            <span className="font-semibold text-white">{formatNumber(item.orders)}</span>
+            <span className="font-semibold text-white font-numeric">{formatNumber(item.orders)}</span>
           </div>
-          <div className="flex justify-between gap-4 text-slate-300">
+          <div className="flex justify-between gap-5 text-slate-300">
             <span>Total Revenue:</span>
-            <span className="font-semibold text-amber-400">{formatCurrency(item.revenue)}</span>
+            <span className="font-semibold text-amber-400 font-numeric">{formatCurrency(item.revenue)}</span>
           </div>
-          <div className="flex justify-between gap-4 text-slate-300">
+          <div className="flex justify-between gap-5 text-slate-300">
             <span>Pizzas Sold:</span>
-            <span className="font-semibold text-emerald-400">{formatNumber(item.pizzas)}</span>
+            <span className="font-semibold text-emerald-400 font-numeric">{formatNumber(item.pizzas)}</span>
           </div>
-          <p className="text-[10px] text-slate-500 pt-1 border-t border-slate-800">
-            Click bar to filter by {item.day}
+          <p className="text-[10px] text-slate-400 pt-1 border-t border-slate-800 font-mono">
+            Click bar to cross-filter dashboard
           </p>
         </div>
       );
@@ -57,34 +59,34 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-md flex flex-col justify-between h-full">
+    <div className="intel-card intel-card-hover rounded-2xl p-5 flex flex-col justify-between h-full">
       
       {/* Visual Header */}
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
-        <div className="flex items-center space-x-2">
-          <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400">
+      <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-800/80">
+        <div className="flex items-center space-x-2.5">
+          <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
             <Calendar className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+            <h3 className="text-xs font-mono font-bold uppercase tracking-widest text-slate-200">
               DAILY TREND FOR TOTAL ORDERS
             </h3>
-            <p className="text-[10px] text-slate-400">Orders distribution across days of the week</p>
+            <p className="text-[11px] text-slate-400 font-normal">Order volume distribution by day of week</p>
           </div>
         </div>
         {selectedDay !== 'All' && (
-          <span className="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded border border-amber-500/30">
-            Filtered: {selectedDay}
+          <span className="text-[10px] bg-amber-500/20 text-amber-400 font-mono font-bold px-2.5 py-1 rounded-md border border-amber-500/30">
+            Filter: {selectedDay}
           </span>
         )}
       </div>
 
       {/* Chart Canvas */}
-      <div className="w-full h-56">
+      <div className="w-full h-60">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
-            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            margin={{ top: 12, right: 10, left: -20, bottom: 0 }}
             onClick={(state) => {
               if (state && state.activePayload && state.activePayload.length) {
                 const clickedDay = state.activePayload[0].payload.day;
@@ -92,36 +94,36 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({
               }
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+            <CartesianGrid strokeDasharray="2 4" stroke="#1e293b" vertical={false} />
             <XAxis
               dataKey="shortDay"
-              stroke="#94a3b8"
+              stroke="#64748b"
               fontSize={11}
               tickLine={false}
-              axisLine={{ stroke: '#475569' }}
+              axisLine={{ stroke: '#334155' }}
             />
             <YAxis
-              stroke="#94a3b8"
+              stroke="#64748b"
               fontSize={11}
               tickLine={false}
               axisLine={false}
               tickFormatter={(val) => (val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val)}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="orders" radius={[4, 4, 0, 0]} cursor="pointer">
+            <Bar dataKey="orders" radius={[6, 6, 0, 0]} cursor="pointer">
               {data.map((entry, index) => {
                 const isSelected = selectedDay === entry.day;
                 const isPeak = entry.orders === maxOrders;
                 
-                let fillColor = '#3b82f6'; // default blue
+                let fillColor = '#3b82f6'; // blue
                 if (isPeak) fillColor = '#f59e0b'; // amber peak
-                if (isSelected) fillColor = '#10b981'; // green selected
+                if (isSelected) fillColor = '#10b981'; // emerald selected
 
                 return (
                   <Cell
                     key={`cell-${index}`}
                     fill={fillColor}
-                    fillOpacity={selectedDay === 'All' || isSelected ? 1 : 0.4}
+                    fillOpacity={selectedDay === 'All' || isSelected ? 1 : 0.35}
                   />
                 );
               })}
@@ -131,12 +133,12 @@ export const DailyTrendChart: React.FC<DailyTrendChartProps> = ({
       </div>
 
       {/* Visual Footer Note */}
-      <div className="mt-2 text-[10px] text-slate-500 flex items-center justify-between border-t border-slate-800/80 pt-2">
-        <span className="flex items-center gap-1">
-          <Info className="w-3 h-3 text-slate-500" />
-          Highest sales on <strong className="text-amber-400">Friday & Thursday</strong> evenings
+      <div className="mt-3 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800/80 pt-2.5 font-mono">
+        <span className="flex items-center gap-1.5">
+          <Info className="w-3.5 h-3.5 text-slate-400" />
+          Peak sales volume on <strong className="text-amber-400 font-bold">Friday (3,538 orders)</strong> & <strong className="text-amber-400 font-bold">Thursday</strong>
         </span>
-        <span className="font-mono">7 Days</span>
+        <span className="text-[10px] text-slate-400">7 Days</span>
       </div>
 
     </div>
