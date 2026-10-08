@@ -18,9 +18,9 @@ interface CategoryDonutChartProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Chicken: '#0080a8',  // Blue/Cyan
-  Classic: '#d9531e',  // Orange
-  Supreme: '#1b7a42',  // Green
+  Chicken: '#06b6d4',  // Cyan
+  Classic: '#f97316',  // Vibrant Orange
+  Supreme: '#10b981',  // Mint Green
   Veggie: '#ffffff',   // White
 };
 
@@ -30,11 +30,11 @@ export const CategoryDonutChart: React.FC<CategoryDonutChartProps> = ({
   onSelectCategory,
 }) => {
   return (
-    <div className="bg-[#562316] border border-[#7f3724] rounded p-3 flex flex-col justify-between h-full shadow-md">
+    <div className="luxury-card luxury-card-hover p-4 flex flex-col justify-between h-full shadow-lg">
       
       {/* Title */}
-      <div className="mb-1">
-        <h3 className="text-xs font-bold text-sky-400 uppercase tracking-wider">
+      <div className="mb-1 pb-2 border-b border-[#281c16]">
+        <h3 className="text-xs font-mono font-bold text-orange-400 uppercase tracking-wider">
           % OF SALES BY PIZZA CATEGORY
         </h3>
       </div>
@@ -52,7 +52,7 @@ export const CategoryDonutChart: React.FC<CategoryDonutChartProps> = ({
                 cy="50%"
                 innerRadius={32}
                 outerRadius={52}
-                paddingAngle={2}
+                paddingAngle={3}
                 dataKey="revenue"
                 nameKey="category"
                 cursor="pointer"
@@ -67,9 +67,9 @@ export const CategoryDonutChart: React.FC<CategoryDonutChartProps> = ({
                     <Cell
                       key={`cat-cell-${entry.category}`}
                       fill={baseColor}
-                      stroke="#562316"
-                      strokeWidth={1.5}
-                      fillOpacity={selectedCategory === 'All' || isSelected ? 1 : 0.4}
+                      stroke="#1a120e"
+                      strokeWidth={2}
+                      fillOpacity={selectedCategory === 'All' || isSelected ? 1 : 0.35}
                     />
                   );
                 })}
@@ -79,7 +79,7 @@ export const CategoryDonutChart: React.FC<CategoryDonutChartProps> = ({
                   `${formatCurrency(value)} (${formatPercent(item.payload.percentage)})`,
                   name,
                 ]}
-                contentStyle={{ backgroundColor: '#3a170e', borderColor: '#7f3724', borderRadius: '4px', fontSize: '11px' }}
+                contentStyle={{ backgroundColor: '#1a120e', borderColor: '#f97316', borderRadius: '12px', fontSize: '11px' }}
                 itemStyle={{ color: '#ffffff' }}
               />
             </PieChart>
@@ -99,7 +99,7 @@ export const CategoryDonutChart: React.FC<CategoryDonutChartProps> = ({
               >
                 <span className="w-2.5 h-2.5 rounded-sm border border-slate-700" style={{ backgroundColor: color }} />
                 <span className="text-slate-200 text-[11px] font-sans">{item.category}</span>
-                <span className="text-sky-300 font-bold text-[10px] ml-auto font-mono">
+                <span className="text-orange-400 font-bold text-[10px] ml-auto font-mono">
                   {formatPercent(item.percentage)}
                 </span>
               </div>
